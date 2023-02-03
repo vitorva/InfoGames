@@ -1,3 +1,5 @@
+import { getCredentials } from "./src/util/getCredentials";
+
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -16,18 +18,15 @@ app.listen(process.env.PORT || 3003);
 const fs = require("fs");
 
 app.get("/games", (req, res) => {
-  const filename = ".env";
-
-  var file_content = fs.readFileSync(filename);
-  const content = JSON.parse(file_content);
+  const [client_id, client_secret, grant_type, access_token] = getCredentials();
 
   axios({
     url: "https://api.igdb.com/v4/games",
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Client-ID": content.client_id,
-      Authorization: "Bearer " + content.access_token,
+      "Client-ID": client_id,
+      Authorization: "Bearer " + access_token,
     },
     data:
       "fields name, url, cover.image_id, genres.name, rating; where platforms = (6) & cover != null & rating >= 80 & rating_count >= 500 & first_release_date <= " +
@@ -58,21 +57,23 @@ app.get("/games", (req, res) => {
         url: "https://id.twitch.tv/oauth2/validate",
         method: "GET",
         headers: {
-          Authorization: "Bearer " + content.access_token,
+          Authorization: "Bearer " + access_token,
         },
       }).catch((err) => {
         axios({
           url: "https://id.twitch.tv/oauth2/token",
           method: "POST",
           params: {
-            client_id: content.client_id,
-            client_secret: content.client_secret,
-            grant_type: content.grant_type,
+            client_id: client_id,
+            client_secret: client_secret,
+            grant_type: grant_type,
           },
         }).then((response) => {
           // Replace the token
-          content.access_token = response.data.access_token;
-          fs.writeFileSync(filename, JSON.stringify(content));
+
+          // TODO
+          //content.access_token = response.data.access_token;
+          //fs.writeFileSync(filename, JSON.stringify(content));
           res.redirect("/games");
         });
       });
