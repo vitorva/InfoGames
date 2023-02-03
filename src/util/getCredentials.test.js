@@ -1,9 +1,10 @@
 import { getCredentials } from "./getCredentials";
 
 test("get credentials from env file", () => {
-  expect(getCredentials()).not.toBeNull();
+  expect(getCredentials(".env-test")).not.toBeNull();
 
-  const [client_id, client_secret, grant_type, access_token] = getCredentials();
+  const [client_id, client_secret, grant_type, access_token] =
+    getCredentials(".env-test");
 
   expect(client_id).not.toBeNull();
 

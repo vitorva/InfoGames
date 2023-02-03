@@ -1,7 +1,7 @@
-import { getEnvFile } from "./getEnvFile";
+import { getContentFile } from "./getContentFile";
 
-export function getCredentials() {
-  const content = getEnvFile();
+export function getCredentials(filename) {
+  const content = getContentFile(filename);
 
   return [
     content.client_id,

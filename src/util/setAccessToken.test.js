@@ -2,13 +2,10 @@ import { getCredentials } from "./getCredentials";
 import { setAccessToken } from "./setAccessToken";
 
 test("replace access_token", () => {
-  const old_access_token = getCredentials()[3];
+  const old_access_token = getCredentials(".env-test")[3];
+  const new_access_token = String(parseInt(old_access_token) + 1);
 
-  // TODO : filename comme paramètre de fonction
+  setAccessToken(new_access_token, ".env-test");
 
-  //setAccessToken("12345", ".env-test");
-
-  const new_access_token = getCredentials()[3];
-
-  //expect(old_access_token).not.toEqual(new_access_token);
+  expect(old_access_token).not.toEqual(new_access_token);
 });

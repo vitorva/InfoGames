@@ -1,4 +1,5 @@
 import { getCredentials } from "./src/util/getCredentials";
+import { setAccessToken } from "./src/util/setAccessToken";
 
 const express = require("express");
 const cors = require("cors");
@@ -14,8 +15,6 @@ app.use(express.static("public"));
 app.use("/src", express.static("src"));
 
 app.listen(process.env.PORT || 3003);
-
-const fs = require("fs");
 
 app.get("/games", (req, res) => {
   const [client_id, client_secret, grant_type, access_token] = getCredentials();
@@ -69,11 +68,7 @@ app.get("/games", (req, res) => {
             grant_type: grant_type,
           },
         }).then((response) => {
-          // Replace the token
-
-          // TODO
-          //content.access_token = response.data.access_token;
-          //fs.writeFileSync(filename, JSON.stringify(content));
+          setAccessToken(response.data.access_token, ".env");
           res.redirect("/games");
         });
       });

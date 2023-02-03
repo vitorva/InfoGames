@@ -1,9 +1,9 @@
-import { getEnvFile } from "./getEnvFile";
+import { getContentFile } from "./getContentFile";
 const fs = require("fs");
 
-export function setAccessToken(response, filename) {
-  const content = getEnvFile();
+export function setAccessToken(access_token, filename) {
+  const content = getContentFile(filename);
 
-  content.access_token = response.data.access_token;
+  content.access_token = access_token;
   fs.writeFileSync(filename, JSON.stringify(content));
 }
